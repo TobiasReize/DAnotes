@@ -1,0 +1,14 @@
+{
+  "targets": {
+    "da-notes-2105d": {
+      "hosting": {
+        "danotes": [
+          "da-notes-2105d"
+        ]
+      }
+    }
+  },
+  "projects": {
+    "default": "da-notes-2105d"
+  }
+}
