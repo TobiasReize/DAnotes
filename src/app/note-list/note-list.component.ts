@@ -26,7 +26,11 @@ export class NoteListComponent {
 
   getList(noteStatus:string): Note[] {    //gibt das Array der Notizen vom Service zurück!
     if (noteStatus == 'notes') {
-      return this.noteService.normalNotes;
+      if (this.favFilter == 'all') {
+        return this.noteService.normalNotes;
+      } else {
+        return this.noteService.normalMarkedNotes;
+      }
     } else {
       return this.noteService.trashNotes;
     }
@@ -47,7 +51,7 @@ export class NoteListComponent {
     }
   }
 
-  
+
   // getDummyData(): Note[] {
   //   return [
   //     {

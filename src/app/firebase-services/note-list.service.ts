@@ -1,6 +1,6 @@
 import { Injectable, OnDestroy, inject } from '@angular/core';
 import { Note } from '../interfaces/note.interface';
-import { collectionData, Firestore, collection, doc, onSnapshot, addDoc, updateDoc, deleteDoc } from '@angular/fire/firestore';
+import { collectionData, Firestore, collection, doc, onSnapshot, addDoc, updateDoc, deleteDoc, query, where, limit, orderBy } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 
 
@@ -11,6 +11,7 @@ export class NoteListService implements OnDestroy {
 
   trashNotes: Note[] = [];
   normalNotes: Note[] = [];
+  normalMarkedNotes: Note[] = [];
 
   firestore: Firestore = inject(Firestore);
   // items$;
@@ -18,6 +19,7 @@ export class NoteListService implements OnDestroy {
 
   unsubNotes;
   unsubTrash;
+  unsubMarkedNotes;
   // unsubSingle;
 
 
@@ -36,6 +38,7 @@ export class NoteListService implements OnDestroy {
 
     this.unsubNotes = this.subNotesList();    //speichert den Rückgabewert der onSnapshot-Methode in einer Variable, damit sie später unsubscribt werden kann! (muss im constructor passieren, ansonsten ist der Typ von unsubNotes nicht definiert!)
     this.unsubTrash = this.subTrashList();    //speichert den Rückgabewert der onSnapshot-Methode in einer Variable, damit sie später unsubscribt werden kann! (muss im constructor passieren, ansonsten ist der Typ von unsubTrash nicht definiert!)
+    this.unsubMarkedNotes = this.subMarkedNotesList();
   }
 
 
@@ -93,10 +96,22 @@ export class NoteListService implements OnDestroy {
 
 
   subNotesList() {    //ruft die Notes-Daten (Liste) von der Datenbank ab und speichert sie in das normalNotes-Array!
-    return onSnapshot(this.getNotesRef(), (list) => {
+    const q = query(this.getNotesRef(), limit(5));
+    return onSnapshot(q, (list) => {
       this.normalNotes = [];
       list.forEach(element => {
         this.normalNotes.push(this.setNoteObject(element.data(), element.id));
+      });
+    });
+  }
+
+
+  subMarkedNotesList() {    //ruft die Notes-Daten (Liste) von der Datenbank ab und speichert sie in das normalNotes-Array!
+    const q = query(this.getNotesRef(), where('marked', '==', true), limit(5));
+    return onSnapshot(q, (list) => {
+      this.normalMarkedNotes = [];
+      list.forEach(element => {
+        this.normalMarkedNotes.push(this.setNoteObject(element.data(), element.id));
       });
     });
   }
@@ -127,6 +142,7 @@ export class NoteListService implements OnDestroy {
     // this.items.unsubscribe();
     this.unsubNotes();
     this.unsubTrash();
+    this.unsubMarkedNotes();
   }
 
 
