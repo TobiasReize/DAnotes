@@ -16,16 +16,27 @@ export class AddNoteDialogComponent {
   title = "";
   description = "";
 
-  constructor(public noteService: NoteListService){}
 
-  closeDialog() {
+  constructor(private noteService: NoteListService){
+
+  }
+
+
+  closeDialog() {   //leer die Eingabefelder und schließt den modalen Dialog!
     this.title = "";
     this.description = "";
     this.addDialogClosed.emit(false);
   }
 
-  addNote(){
-    //beachte das closeDialog() zum Schluss kommt, denn es leert die Variablen
+  
+  addNote() {   //speichert die Note in der Datenbank!
+    let note: Note = {
+      type: "note",
+      title: this.title,
+      content: this.description,
+      marked: false,
+    }
+    this.noteService.addNote(note);
     this.closeDialog();
   }
 }

@@ -47,9 +47,7 @@ export class NoteListComponent {
     }
   }
 
-
-
-
+  
   // getDummyData(): Note[] {
   //   return [
   //     {

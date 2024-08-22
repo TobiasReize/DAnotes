@@ -39,7 +39,7 @@ export class NoteListService implements OnDestroy {
   }
 
 
-  async addNote(item:{}) {    //fügt Daten zu der definierten Sammlung hinzu!
+  async addNote(item: Note) {    //fügt Daten zu der definierten Sammlung hinzu!
     await addDoc(this.getNotesRef(), item).catch(
       (err) => {console.error(err);}
     ).then(
@@ -74,7 +74,7 @@ export class NoteListService implements OnDestroy {
       type: obj.type || 'note',
       title: obj.title || '',
       content: obj.content || '',
-      marked: obj.marked || false
+      marked: obj.marked || false,
     }
   }
 
