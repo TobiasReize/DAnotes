@@ -96,6 +96,7 @@ export class NoteListService implements OnDestroy {
 
 
   subNotesList() {    //ruft die Notes-Daten (Liste) von der Datenbank ab und speichert sie in das normalNotes-Array!
+    // let refSubCol = collection(this.firestore, 'notes/GH07vlPBc2drBL1hm3gc/notesExtra');   //Referenz auf eine Subcollection
     const q = query(this.getNotesRef(), limit(5));
     return onSnapshot(q, (list) => {
       this.normalNotes = [];
