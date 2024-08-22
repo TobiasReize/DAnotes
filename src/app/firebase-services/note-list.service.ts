@@ -1,6 +1,6 @@
 import { Injectable, OnDestroy, inject } from '@angular/core';
 import { Note } from '../interfaces/note.interface';
-import { collectionData, Firestore, collection, doc, onSnapshot, addDoc } from '@angular/fire/firestore';
+import { collectionData, Firestore, collection, doc, onSnapshot, addDoc, updateDoc } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 
 
@@ -36,6 +36,35 @@ export class NoteListService implements OnDestroy {
 
     this.unsubNotes = this.subNotesList();    //speichert den Rückgabewert der onSnapshot-Methode in einer Variable, damit sie später unsubscribt werden kann! (muss im constructor passieren, ansonsten ist der Typ von unsubNotes nicht definiert!)
     this.unsubTrash = this.subTrashList();    //speichert den Rückgabewert der onSnapshot-Methode in einer Variable, damit sie später unsubscribt werden kann! (muss im constructor passieren, ansonsten ist der Typ von unsubTrash nicht definiert!)
+  }
+
+
+  async updateNote(note: Note) {    //Überschreibt einzelne Felder des definierten Dokuments!
+    if (note.id) {
+      let docRef = this.getSingleDocRef(this.getColIdFromNote(note), note.id);
+      await updateDoc(docRef, this.getCleanJson(note)).catch(
+        (err) => {console.error(err);}
+      );
+    }
+  }
+
+
+  getCleanJson(note: Note): {} {    //gibt ein "normales" Objekt zurück! (dieser Datentyp wird bei der updateDoc-Methode benötigt!)
+    return {
+      type: note.type,
+      title: note.title,
+      content: note.content,
+      marked: note.marked,
+    }
+  }
+
+
+  getColIdFromNote(note: Note): 'notes' | 'trash' {   //gibt die korrekte Collection-ID zurück! 
+    if (note.type == 'note') {
+      return 'notes';
+    } else {
+      return 'trash';
+    }
   }
 
 
