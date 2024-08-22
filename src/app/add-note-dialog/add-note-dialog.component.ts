@@ -28,7 +28,7 @@ export class AddNoteDialogComponent {
     this.addDialogClosed.emit(false);
   }
 
-  
+
   addNote() {   //speichert die Note in der Datenbank!
     let note: Note = {
       type: "note",
@@ -36,7 +36,7 @@ export class AddNoteDialogComponent {
       content: this.description,
       marked: false,
     }
-    this.noteService.addNote(note);
+    this.noteService.addNote(note, 'notes');
     this.closeDialog();
   }
 }

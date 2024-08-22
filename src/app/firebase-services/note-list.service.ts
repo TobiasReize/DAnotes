@@ -1,6 +1,6 @@
 import { Injectable, OnDestroy, inject } from '@angular/core';
 import { Note } from '../interfaces/note.interface';
-import { collectionData, Firestore, collection, doc, onSnapshot, addDoc, updateDoc } from '@angular/fire/firestore';
+import { collectionData, Firestore, collection, doc, onSnapshot, addDoc, updateDoc, deleteDoc } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 
 
@@ -39,6 +39,13 @@ export class NoteListService implements OnDestroy {
   }
 
 
+  async deleteNote(colId: 'notes' | 'trash', docId: string) {    //entfernt ein gesamtes Dokument aus der definierten Collection!
+    await deleteDoc(this.getSingleDocRef(colId, docId)).catch(
+      (err) => {console.error(err);}
+    );
+  }
+
+
   async updateNote(note: Note) {    //Überschreibt einzelne Felder des definierten Dokuments!
     if (note.id) {
       let docRef = this.getSingleDocRef(this.getColIdFromNote(note), note.id);
@@ -68,12 +75,20 @@ export class NoteListService implements OnDestroy {
   }
 
 
-  async addNote(item: Note) {    //fügt Daten zu der definierten Sammlung hinzu!
-    await addDoc(this.getNotesRef(), item).catch(
-      (err) => {console.error(err);}
-    ).then(
-      (docRef) => {console.log("Document written with ID: ", docRef?.id);}  //mit docRef? wird es optional! Somit wird der Fehler von TS eliminiert!
-    )
+  async addNote(item: Note, colId: 'notes' | 'trash') {    //fügt Daten zu der definierten Sammlung hinzu!
+    if (colId == 'notes') {   //fügt die Daten zu der Collection notes hinzu!
+      await addDoc(this.getNotesRef(), item).catch(
+        (err) => {console.error(err);}
+      ).then(
+        (docRef) => {console.log("Document written with ID: ", docRef?.id);}  //mit docRef? wird es optional! Somit wird der Fehler von TS eliminiert!
+      )
+    } else {    //fügt die Daten zu der Collection trash hinzu!
+      await addDoc(this.getTrashRef(), item).catch(
+        (err) => {console.error(err);}
+      ).then(
+        (docRef) => {console.log("Document written with ID: ", docRef?.id);}  //mit docRef? wird es optional! Somit wird der Fehler von TS eliminiert!
+      )
+    }
   }
 
 
