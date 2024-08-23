@@ -24,7 +24,7 @@ export class NoteListService implements OnDestroy {
 
 
   constructor() {
-    // this.items$ = collectionData(this.getNotesRef());  //--> erstellt erst mal nur ein Observable-Objekt (hier muss man dann mit async arbeiten!)
+    // this.items$ = collectionData(this.getNotesRef());  //--> erstellt erst mal nur ein Observable-Objekt, daher "$" (hier muss man dann mit async arbeiten!) --> muss im constructor ausgeführt werden!
     // this.items = this.items$.subscribe((list) => {     //--> extra Schritt subscribe damit auch regelmäßig neue Daten ausgelesen werden können!
     //   list.forEach(element => {
     //     console.log(element);
